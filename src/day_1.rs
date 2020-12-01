@@ -103,6 +103,16 @@ fn d1_bench_ex1(b: &mut Bencher) {
     let input = read_input(include_str!("input/day1.txt"));
     b.iter(|| exercise_1(&input, 2020));
 }
+#[bench]
+fn d1_bench_ex1bigboi(b: &mut Bencher) {
+    let input = read_input(include_str!("input/day1bigboi.txt"));
+    b.iter(|| exercise_1(&input, 99920044));
+}
+
+#[bench]
+fn d1_bench_parsebigboi(b: &mut Bencher) {
+    b.iter(|| read_input(include_str!("input/day1bigboi.txt")));
+}
 
 #[bench]
 fn d1_bench_ex2(b: &mut Bencher) {
