@@ -27,3 +27,20 @@ test day_2::d2_bench_ex2bigboi    ... bench:  73,738,020 ns/iter (+/- 7,218,869)
 test day_2::d2_bench_parse        ... bench:     297,815 ns/iter (+/- 8,831)
 test day_2::d2_bench_parsebigboi  ... bench: 131,862,320 ns/iter (+/- 9,651,016)
 ```
+
+Day 3
+```rust
+test day_3::d2_bench_ex1          ... bench:       1,215 ns/iter (+/- 62)
+test day_3::d2_bench_ex1_complete ... bench:     130,636 ns/iter (+/- 9,570)
+test day_3::d2_bench_ex2          ... bench:       5,509 ns/iter (+/- 54)
+test day_3::d2_bench_ex2_complete ... bench:     134,395 ns/iter (+/- 4,449)
+test day_3::d2_bench_parse        ... bench:     127,902 ns/iter (+/- 1,813)
+``` 
+
+Day 4
+```rust
+test day_4::tests::d4_bench_ex1       ... bench:     139,504 ns/iter (+/- 21,027)
+test day_4::tests::d4_bench_ex1bigboi ... bench: 115,250,910 ns/iter (+/- 6,109,180)
+test day_4::tests::d4_bench_ex2       ... bench:     202,942 ns/iter (+/- 34,534)
+test day_4::tests::d4_bench_ex2bigboi ... bench: 183,692,110 ns/iter (+/- 11,607,027)
+```
