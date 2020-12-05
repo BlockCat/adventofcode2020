@@ -44,3 +44,10 @@ test day_4::tests::d4_bench_ex1bigboi ... bench: 115,250,910 ns/iter (+/- 6,109,
 test day_4::tests::d4_bench_ex2       ... bench:     202,942 ns/iter (+/- 34,534)
 test day_4::tests::d4_bench_ex2bigboi ... bench: 183,692,110 ns/iter (+/- 11,607,027)
 ```
+
+Day 5
+```rust
+test day_5::tests::d5_bench_ex1       ... bench:      20,679 ns/iter (+/- 285)
+test day_5::tests::d5_bench_ex2       ... bench:      24,726 ns/iter (+/- 2,014)
+test day_5::tests::d5_bench_ex2bigboi ... bench: 736,717,660 ns/iter (+/- 25,804,178)
+```
