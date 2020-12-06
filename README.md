@@ -51,3 +51,9 @@ test day_5::tests::d5_bench_ex1       ... bench:      20,679 ns/iter (+/- 285)
 test day_5::tests::d5_bench_ex2       ... bench:      24,726 ns/iter (+/- 2,014)
 test day_5::tests::d5_bench_ex2bigboi ... bench: 736,717,660 ns/iter (+/- 25,804,178)
 ```
+
+Day 6
+```rust
+test day_6::tests::d6_bench_ex1 ... bench:      74,328 ns/iter (+/- 1,291)
+test day_6::tests::d6_bench_ex2 ... bench:     112,775 ns/iter (+/- 704)
+```

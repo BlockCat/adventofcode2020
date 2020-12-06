@@ -21,7 +21,7 @@ fn get_number(length: usize, it: &mut impl Iterator<Item = char>, back: char) ->
 
 fn exercise_2(input: &str, row_length: usize, col_length: usize) -> usize {
     let (min, max, sum) = input
-        .lines()
+        .lines()        
         .map(|line| {
             let mut it = line.chars();
             let row = get_number(row_length, &mut it, 'B');
