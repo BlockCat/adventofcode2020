@@ -31,8 +31,7 @@ fn exercise_2(input: &str) -> u32 {
         let initial = chars_to_set(x);
         sum += it
             .by_ref()
-            .take_while(|x| !x.trim().is_empty())
-            .chain(vec![x])
+            .take_while(|x| !x.trim().is_empty())            
             .map(chars_to_set)
             .fold(initial, |acc, x| acc & x)
             .count_ones();

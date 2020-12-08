@@ -54,6 +54,18 @@ test day_5::tests::d5_bench_ex2bigboi ... bench: 736,717,660 ns/iter (+/- 25,804
 
 Day 6
 ```rust
-test day_6::tests::d6_bench_ex1 ... bench:      74,328 ns/iter (+/- 1,291)
-test day_6::tests::d6_bench_ex2 ... bench:     112,775 ns/iter (+/- 704)
+test day_6::tests::d6_bench_ex1 ... bench:      78,477 ns/iter (+/- 4,746)
+test day_6::tests::d6_bench_ex2 ... bench:      70,428 ns/iter (+/- 1,031)
+```
+
+Day 7
+```rust
+test day_7::tests::d7_bench_ex1 ... bench:      65,651 ns/iter (+/- 9,235)
+test day_7::tests::d7_bench_ex2 ... bench:      38,576 ns/iter (+/- 1,862)
+```
+
+Day 8
+```rust
+test day_8::tests::d8_bench_ex1 ... bench:       6,359 ns/iter (+/- 59)
+test day_8::tests::d8_bench_ex2 ... bench:     384,795 ns/iter (+/- 6,596)
 ```
