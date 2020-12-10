@@ -8,7 +8,7 @@ enum Instruction {
 }
 
 pub fn run() {
-    let input = read_input(include_str!("input/day8.txt").trim());
+    let input = read_input(include_str!("input/day8bigboi.txt").trim());
     println!("{}", exercise_1(&input, None).unwrap_err());
     println!("{}", exercise_2(&input));
 }
@@ -48,7 +48,7 @@ fn exercise_1(
         let code = replacement
             .as_ref()
             .filter(|x| x.0 == i)
-            .map(|x| &x.1)            
+            .map(|x| &x.1)
             .unwrap_or(&codes[i]);
         match code {
             Instruction::NOP(_) => {}
@@ -60,6 +60,47 @@ fn exercise_1(
             }
         }
 
+        i += 1;
+    }
+    Ok(glob)
+}
+
+fn exercise_2_sub(
+    codes: &Vec<Instruction>,
+    oldvisited: &HashSet<usize>,
+    pointer: usize,
+    global: isize,
+    replacement: Instruction,
+) -> Result<isize, isize> {
+    let mut visited = HashSet::<usize>::new();
+
+    let mut glob = global;
+    let mut i = pointer;
+
+    match replacement {
+        Instruction::NOP(_) => {}
+        Instruction::JMP(v) => {
+            i = (i as isize + (v - 1)) as usize;
+        }
+        Instruction::ACC(v) => {
+            glob += v;
+        }
+    }
+    i += 1;
+
+    while i < codes.len() {
+        if oldvisited.contains(&i) || !visited.insert(i) {
+            return Err(glob);
+        }
+        match codes[i] {
+            Instruction::NOP(_) => {}
+            Instruction::JMP(v) => {
+                i = (i as isize + (v - 1)) as usize;
+            }
+            Instruction::ACC(v) => {
+                glob += v;
+            }
+        }
         i += 1;
     }
     Ok(glob)
@@ -78,12 +119,12 @@ fn exercise_2(codes: &Vec<Instruction>) -> isize {
 
         match codes[i] {
             Instruction::NOP(v) => {
-                if let Ok(g) = exercise_1(codes, Some((i, Instruction::JMP(v)))) {                    
+                if let Ok(g) = exercise_2_sub(codes, &visited, i, glob, Instruction::JMP(v)) {
                     return g;
                 }
             }
             Instruction::JMP(v) => {
-                if let Ok(g) = exercise_1(codes, Some((i, Instruction::NOP(v)))) {                    
+                if let Ok(g) = exercise_2_sub(codes, &visited, i, glob, Instruction::NOP(v)) {
                     return g;
                 }
                 i = (i as isize + (v - 1)) as usize;
@@ -104,7 +145,7 @@ mod tests {
     use crate::test::Bencher;
 
     #[test]
-    fn d8p1_test() {
+    fn d8p1a_test() {
         let input = read_input(
             r"nop +0
 acc +1
@@ -121,8 +162,9 @@ acc +6",
 
     #[test]
     fn d8p2_test() {
-        // let input = read_input(include_str!("input/day7test.txt"));
-        // assert_eq!(32, exercise_2(&input));
+        let input = read_input(include_str!("input/day8.txt"));
+        assert_eq!(2003, exercise_1(&input, None).unwrap_err());
+        assert_eq!(1984, exercise_2(&input));
     }
 
     #[bench]
@@ -136,6 +178,4 @@ acc +6",
         let input = read_input(include_str!("input/day8.txt"));
         b.iter(|| exercise_2(&input));
     }
-
-  
 }
