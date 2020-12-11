@@ -79,7 +79,14 @@ test day_9::tests::d9_bench_parse ... bench:      30,763 ns/iter (+/- 2,236)
 
 Day 10
 ```rust
-test day_10::tests::d10_bench_ex1   ... bench:         288 ns/iter (+/- 80)
-test day_10::tests::d10_bench_ex2   ... bench:      13,113 ns/iter (+/- 2,034)
-test day_10::tests::d10_bench_parse ... bench:       9,617 ns/iter (+/- 682)
+test day_10::tests::d10_bench_ex1   ... bench:         280 ns/iter (+/- 17)
+test day_10::tests::d10_bench_ex2   ... bench:         832 ns/iter (+/- 15)
+test day_10::tests::d10_bench_parse ... bench:       8,860 ns/iter (+/- 236)
+```
+
+Day 11
+```rust
+test day_11::tests::d11_bench_ex1   ... bench:  14,884,160 ns/iter (+/- 1,925,227)
+test day_11::tests::d11_bench_ex2   ... bench:  14,632,240 ns/iter (+/- 843,816)
+test day_11::tests::d11_bench_parse ... bench:      72,363 ns/iter (+/- 1,598)
 ```

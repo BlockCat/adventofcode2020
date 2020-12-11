@@ -1,19 +1,20 @@
 // #[test]
 pub fn run() {
-    let input = read_input(include_str!("input/day10.txt"));
+    let jump = 3;
+    let input = read_input(include_str!("input/day10.txt"), jump);
     println!("{:?}", input);
     println!("{}", exercise_1(&input));
-    println!("{}", exercise_2(&input));
+    println!("{}", exercise_2(&input, jump));
 }
 
-pub fn read_input(input: &str) -> Vec<usize> {
+pub fn read_input(input: &str, jump: usize) -> Vec<usize> {
     let mut lines = input
         .lines()
         .map(|x| x.parse().unwrap())
         .collect::<Vec<_>>();
     lines.push(0);
     lines.sort();
-    lines.push(lines.last().unwrap() + 3);
+    lines.push(lines.last().unwrap() + jump);
     lines
 }
 
@@ -36,37 +37,21 @@ fn exercise_1(slice: &Vec<usize>) -> usize {
     (one) * (three)
 }
 
-fn exercise_2(slice: &Vec<usize>) -> usize {
-    let map = slice
-        .iter()
-        .enumerate()
-        .map(|(i, _)| count_it(slice, i))
-        .collect::<Vec<_>>();
+fn exercise_2(slice: &Vec<usize>, jump: usize) -> usize {
+    let mut map = vec![0usize; slice.len()];
 
-    let mut d = vec![0usize; slice.len()];
+    map[0] = 1;
+    map[1] = 1;
 
-    for x in &map[0] {
-        d[*x] = 1;
+    for i in 2..slice.len() {
+        let start_index = i.saturating_sub(jump);
+        map[i] = (start_index..i)            
+            .filter(|x| slice[i] - slice[*x] <= jump)
+            .map(|x| map[x])
+            .sum();
     }
 
-    for (index, _) in slice.iter().enumerate() {
-        for neighbour_index in &map[index] {
-            d[*neighbour_index] += d[index];
-        }
-    }
-
-    *d.last().unwrap()
-}
-
-fn count_it(slice: &Vec<usize>, index: usize) -> Vec<usize> {
-    let reachable_by = slice[index + 1..]
-        .iter()
-        .take_while(|x| **x - slice[index] <= 3)
-        .enumerate()
-        .map(|x| (x.0 + index + 1))
-        .collect::<Vec<_>>();
-
-    reachable_by
+    *map.last().unwrap()
 }
 
 #[cfg(test)]
@@ -75,30 +60,30 @@ mod tests {
     use crate::test::Bencher;
     #[test]
     fn d10p1_test() {
-        let input = read_input(include_str!("input/day10.txt"));
+        let input = read_input(include_str!("input/day10.txt"), 3);
         assert_eq!(2170, exercise_1(&input));
     }
 
     #[test]
     fn d10p2_test() {
-        let input = read_input(include_str!("input/day10.txt"));
-        assert_eq!(24803586664192, exercise_2(&input));
+        let input = read_input(include_str!("input/day10.txt"), 3);
+        assert_eq!(24803586664192, exercise_2(&input, 3));
     }
 
     #[bench]
     fn d10_bench_parse(b: &mut Bencher) {
-        b.iter(|| read_input(include_str!("input/day1.txt")));
+        b.iter(|| read_input(include_str!("input/day1.txt"), 3));
     }
     #[bench]
     fn d10_bench_ex1(b: &mut Bencher) {
-        let input = read_input(include_str!("input/day10.txt"));
+        let input = read_input(include_str!("input/day10.txt"), 3);
         b.iter(|| exercise_1(&input));
     }
 
     #[bench]
     fn d10_bench_ex2(b: &mut Bencher) {
-        let input = read_input(include_str!("input/day10.txt"));
-        b.iter(|| exercise_2(&input));
+        let input = read_input(include_str!("input/day10.txt"), 3);
+        b.iter(|| exercise_2(&input, 3));
     }
 
     // #[bench]

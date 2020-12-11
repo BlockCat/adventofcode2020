@@ -1,8 +1,8 @@
 use hashbrown::HashMap;
-use std::{ops::Add, fmt::Debug};
 use std::ops::AddAssign;
 use std::ops::Sub;
 use std::ops::SubAssign;
+use std::{fmt::Debug, ops::Add};
 
 #[derive(PartialEq, Eq, Clone, Copy, Hash, Debug, Ord, PartialOrd)]
 pub struct Vector2(pub isize, pub isize);
@@ -205,6 +205,14 @@ where
         self.grid.chunks(self.width).map(|x| Vec::from(x)).collect()
     }
 
+    pub fn iter<'a>(&'a self) -> GridIterator<'a, T> {
+        GridIterator {
+            grid: &self,
+            x: 0,
+            y: 0,
+        }
+    }
+
     pub fn set(&mut self, x: usize, y: usize, value: T) {
         self.grid[x + y * self.width] = value;
     }
@@ -228,8 +236,41 @@ where
     pub fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
         self.grid.get_mut(x + y * self.width)
     }
+}
 
-    
+pub struct GridIterator<'a, T>
+where
+    T: Clone + PartialEq + Eq + Default,
+{
+    grid: &'a Grid<T>,
+    x: usize,
+    y: usize,
+}
+
+impl<'a, T> Iterator for GridIterator<'a, T>
+where
+    T: Clone + PartialEq + Eq + Default,
+{
+    type Item = ((usize, usize), &'a T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let val = self.grid.get(self.x, self.y);
+
+        if let Some(v) = val {
+            let x = self.x;
+            let y = self.y;
+
+            self.x += 1;
+            if self.x >= self.grid.width {
+                self.x = 0;
+                self.y += 1;
+            }
+
+            return Some(((x, y), v));
+        } else {
+            return None;
+        }
+    }
 }
 
 pub mod intcode {
@@ -291,7 +332,8 @@ pub mod intcode {
 
     #[derive(Debug, PartialEq, Eq)]
     pub enum IntProgramResult {
-        Value(i64), Stalled
+        Value(i64),
+        Stalled,
     }
 
     #[derive(Clone)]
@@ -387,12 +429,13 @@ pub mod intcode {
                     3 => {
                         // input
                         let index = self.get_index(mode_1, self.pc + 1);
-                        self.memory[index as usize] = if let Some(input) = self.input_stack.pop_front() {
-                            input
-                        } else {
-                            return Some(IntProgramResult::Stalled);
-                        };
-                          
+                        self.memory[index as usize] =
+                            if let Some(input) = self.input_stack.pop_front() {
+                                input
+                            } else {
+                                return Some(IntProgramResult::Stalled);
+                            };
+
                         self.pc += 2;
                     }
                     4 => {
