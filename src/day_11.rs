@@ -61,10 +61,9 @@ fn exercise_1(input: &Grid<Seat>) -> usize {
         grid
     };
 
-    let mut round = 0;
-    while continue_loop {
-        round += 1;
+    while continue_loop {        
         continue_loop = false;
+
 
         for ((x, y), v) in prev_round.iter() {
             let counter = seen_grid

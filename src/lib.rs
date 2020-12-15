@@ -1,5 +1,5 @@
 use hashbrown::HashMap;
-use std::ops::AddAssign;
+use std::ops::{AddAssign, Mul};
 use std::ops::Sub;
 use std::ops::SubAssign;
 use std::{fmt::Debug, ops::Add};
@@ -30,6 +30,23 @@ impl Sub for Vector2 {
 
     fn sub(self, other: Self) -> Self {
         Vector2(self.0 - other.0, self.1 - other.1)
+    }
+}
+
+impl Mul<[[isize; 2]; 2]> for Vector2 {
+    type Output = Vector2;
+
+    // [0, 1] * [[1, 0], [0, 1]]
+    fn mul(self, rhs: [[isize; 2]; 2]) -> Self::Output {
+        Vector2(self.0 * rhs[0][0] + self.1 * rhs[1][0], self.0 * rhs[0][1] + self.1 * rhs[1][1])
+    }
+}
+
+impl Mul<isize> for Vector2 {
+    type Output = Vector2;
+
+    fn mul(self, rhs: isize) -> Self::Output {
+        Vector2(self.0 * rhs, self.1 * rhs)
     }
 }
 
