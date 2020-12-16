@@ -1,7 +1,6 @@
-use hashbrown::HashMap;
-use std::ops::{AddAssign, Mul};
 use std::ops::Sub;
 use std::ops::SubAssign;
+use std::ops::{AddAssign, Mul};
 use std::{fmt::Debug, ops::Add};
 
 #[derive(PartialEq, Eq, Clone, Copy, Hash, Debug, Ord, PartialOrd)]
@@ -38,7 +37,10 @@ impl Mul<[[isize; 2]; 2]> for Vector2 {
 
     // [0, 1] * [[1, 0], [0, 1]]
     fn mul(self, rhs: [[isize; 2]; 2]) -> Self::Output {
-        Vector2(self.0 * rhs[0][0] + self.1 * rhs[1][0], self.0 * rhs[0][1] + self.1 * rhs[1][1])
+        Vector2(
+            self.0 * rhs[0][0] + self.1 * rhs[1][0],
+            self.0 * rhs[0][1] + self.1 * rhs[1][1],
+        )
     }
 }
 
@@ -286,6 +288,97 @@ where
             return Some(((x, y), v));
         } else {
             return None;
+        }
+    }
+}
+
+pub mod interval_tree {
+
+    #[derive(Debug)]
+    pub struct Interval<T> {
+        pub value: T,
+        pub start: usize,
+        pub end: usize,
+    }
+
+    impl<T> Interval<T> {
+        pub fn contains(&self, value: usize) -> bool {
+            value >= self.start && value <= self.end
+        }
+    }
+
+    #[derive(Debug)]
+    pub struct IntervalTree<T> {
+        center: usize,
+        intersections: Vec<Interval<T>>,
+        left: Option<Box<IntervalTree<T>>>,
+        right: Option<Box<IntervalTree<T>>>,
+    }
+
+    impl<T> IntervalTree<T> {
+        pub fn new(center: usize) -> IntervalTree<T> {
+            IntervalTree {
+                center,
+                intersections: Vec::new(),
+                left: None,
+                right: None,
+            }
+        }
+
+        pub fn add(&mut self, interval: Interval<T>) {
+            if interval.end < self.center {
+                if let Some(child) = &mut self.left {
+                    child.as_mut().add(interval);
+                } else {
+                    let mut new_tree = IntervalTree {
+                        center: (interval.start + interval.end) / 2,
+                        intersections: Vec::new(),
+                        left: None,
+                        right: None,
+                    };
+                    new_tree.add(interval);
+                    self.left = Some(Box::new(new_tree));
+                }
+            } else if interval.start > self.center {
+                if let Some(child) = &mut self.right {
+                    child.as_mut().add(interval);
+                } else {
+                    let mut new_tree = IntervalTree {
+                        center: (interval.start + interval.end) / 2,
+                        intersections: Vec::new(),
+                        left: None,
+                        right: None,
+                    };
+                    new_tree.add(interval);
+                    self.right = Some(Box::new(new_tree));
+                }
+            } else {
+                self.intersections.push(interval);
+            }
+        }
+
+        pub fn intersecting<'a>(
+            &'a self,
+            value: usize,
+        ) -> impl Iterator<Item = &'a Interval<T>> + 'a {
+            let intersections = self.intersections.iter().filter(move |x| x.contains(value));
+
+            let b: Box<dyn Iterator<Item = &Interval<T>>> = if value < self.center {
+                if let Some(child) = &self.left {
+                    Box::new(intersections.chain(child.intersecting(value)))
+                } else {
+                    Box::new(intersections)
+                }
+            } else if value > self.center {
+                if let Some(child) = &self.right {
+                    Box::new(intersections.chain(child.intersecting(value)))
+                } else {
+                    Box::new(intersections)
+                }
+            } else {
+                Box::new(intersections)
+            };
+            return b;
         }
     }
 }
