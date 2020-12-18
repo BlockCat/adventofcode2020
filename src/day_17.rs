@@ -4,9 +4,9 @@ use utils::VectorN;
 // #[test]
 pub fn run() {
     let input = read_input(include_str!("input/day17.txt"));
-    println!("{}", exercise_1(&input, 6));
+    println!("{}", exercise_1(&input, 160));
     // let input = read_input_hack(include_str!("input/day17.txt"));
-    println!("{}", exercise_2(&input, 6));
+    println!("{}", exercise_2(&input, 160));
 }
 
 type Vector = VectorN<4>;
@@ -61,6 +61,31 @@ fn exercise_2(input: &HashSet<Vector>, iterations: usize) -> usize {
     exercise_a(input, iterations, offsets)
 }
 
+fn exercise_b<const N: usize>(input: &HashSet<VectorN<N>>, iterations: usize) -> usize {
+    let mut old_set = input.clone();
+    for _ in 0..iterations {
+        let cands = candidates(&old_set, &offsets);
+        old_set = cands
+            .into_iter()
+            .filter(|v| {
+                let count = offsets
+                    .iter()
+                    .filter_map(|w| old_set.get(&(w.clone() + v.clone())))
+                    .count();
+
+                match (old_set.contains(v), count) {
+                    (true, 2) => true,
+                    (true, 3) => true,
+                    (false, 3) => true,
+                    _ => false,
+                }
+            })
+            .collect();
+    }
+
+    old_set.len()
+}
+
 fn exercise_a(input: &HashSet<Vector>, iterations: usize, offsets: Vec<Vector>) -> usize {
     let mut old_set = input.clone();
     for _ in 0..iterations {
@@ -86,7 +111,10 @@ fn exercise_a(input: &HashSet<Vector>, iterations: usize, offsets: Vec<Vector>) 
     old_set.len()
 }
 
-fn candidates(input: &HashSet<Vector>, offsets: &Vec<Vector>) -> HashSet<Vector> {
+fn candidates<const N: usize>(
+    input: &HashSet<VectorN<N>>,
+    offsets: &Vec<VectorN<N>>,
+) -> HashSet<VectorN<N>> {
     input
         .iter()
         .flat_map(|v| offsets.iter().map(move |w| v.clone() + w.clone()))
