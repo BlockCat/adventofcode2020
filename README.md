@@ -121,3 +121,9 @@ Day 18
 test day_18::tests::d18_bench_ex1 ... bench:      84,736 ns/iter (+/- 5,731)
 test day_18::tests::d18_bench_ex2 ... bench:     752,270 ns/iter (+/- 172,890)
 ```
+
+Day 19
+```rust
+test day_19::tests::d18_bench_ex1 ... bench:  20,120,580 ns/iter (+/- 2,380,114)
+test day_19::tests::d18_bench_ex2 ... bench:  79,976,420 ns/iter (+/- 2,086,318)
+```
