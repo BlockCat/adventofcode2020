@@ -7,7 +7,7 @@ extern crate test;
 extern crate utils;
 
 #[allow(dead_code)]
-mod day_24;
+mod day_25;
 // mod day_9;
 // mod day_8;
 // mod day_7;
@@ -19,5 +19,5 @@ mod day_24;
 // mod day_1;
 
 fn main() {
-    day_24::run();
+    day_25::run();
 }
